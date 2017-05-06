@@ -1,0 +1,84 @@
+/* Common Part
+----------------------------------------------- */
+html, body {
+    height:100%;
+    background-color: #ccc;
+}
+body {
+    font:14px Arial, Helvetica, sans-serif;
+    line-height:18px;
+}
+.wrap {
+    margin: 0 auto;
+    width: 1000px;
+    background-color: #FFF;
+}
+h1 {
+    font:18px Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 15px 0;
+}
+h2 {
+    font:16px Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 5px 0;
+    font-weight: bold;
+}
+.content {
+
+}
+div.start p {
+    text-align: center;
+}
+
+div.take p {
+    text-align: center;
+}
+
+div.set p {
+    margin: 10px 40px;
+    font-weight: bold;
+}
+div.row {
+    margin: 0 20px;
+}
+/*  
+    пустой div лучше не делать 
+    лучше не юзать все теги, а писать для конкретного класса
+*/
+div.row div {
+    float: left;
+    width: 8%;
+}
+
+.row:after {
+    clear: both;
+    content: '';
+    display: block;
+}
+.resplayer, .rescomp {
+    padding: 20px 20px;
+    text-align: left;
+    font:16px Arial, Helvetica, sans-serif;
+}
+.score {
+    width: 100%;
+    margin: 0 0;
+    border-collapse: collapse;
+}
+.score th {
+    font-weight: bold;
+    width: 50%;
+}
+.score td {
+    text-align: center;
+
+    width: 50%;
+}
+.result{
+    color: red;
+    font-weight: bold;
+    margin: 20px 0;
+    text-align: center;
+}
+

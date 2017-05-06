@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="reset.css" rel="stylesheet">
+        <link href="main.css" rel="stylesheet">
+        <script language="javascript" src="jquery-3.1.1.min.js"></script>
+        <script language="javascript" src="script.js"></script>
+    </head>
+    <body>
+        <div class="wrap">
+            <h1>Блэк-джек</h1>
+            <div class="content">
+                <div class="start">
+                    <p><input  type="button" name="start" value="Start game" /></p>
+                </div>
+                <div class="set">
+                    
+                </div>
+                <div class="take">
+                    <p><input type="button" name="take" value="Take card" style="display: none;" /></p>
+                    <p>&nbsp</p>
+                    <p><input type="button" name="enough" value="Enough" style="display: none;" /></p>
+                </div>
+                <p class="resplayer">
+                    <span style="display: none;">Количество очков: </span>
+                    <span id="resplayer"></span>
+                </p>
+                <p class="rescomp">
+                    <span style="display: none;">Количество очков компьютера: </span>
+                    <span id="rescomp"></span>
+                </p>
+                <p class="result"></p>
+                <table class="score">
+                    <tr>
+                        <th colspan="2">Статистика</th>
+                    </tr>
+                    <tr>
+                        <th>You</th>
+                        <th>Comp</th>
+                    </tr>
+                    <tr>
+                        <td id="you">0</td>
+                        <td id="comp">0</td>
+                    </tr>
+                </table>
+                <div>&nbsp;</div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            
+            $(function(){
+                var players = [ new Player("you") , new Player("comp") ];
+                var game = new Game(players);
+                var elem;
+                var index; 
+                
+                $('input[name=start]').click(function() {
+                    $('input[name=start]').hide();
+                    $('input[name=take]').show();
+                    $('input[name=enough]').show();
+                    $('div.set').empty();
+                    $('#resplayer').empty().hide();
+                    $('p.rescomp span:first').hide();
+                    $('#rescomp').empty();
+                    $('p.result').text('');
+                    
+                    index = 0;
+                    players[index].setScore(0);
+                    players[index].removeCards();
+                    
+                    game.checkDeck();
+                    elem = $('div.set').append('<div class="row">').find('div.row:last');
+                    $('p.resplayer span:first').show(500);
+
+                    players[index].addCard(game.nextStep());
+                    showOneCard(elem, players[index].getLastCard());
+                    players[index].addCard(game.nextStep());
+                    showOneCard(elem, players[index].getLastCard());
+                    
+                    if (!game.continue(players[index])) {
+                        stopSet();
+                    }
+                });
+                $('input[name=enough]').click(function() {
+                    stopSet();
+                });
+                $('input[name=take]').click(function() {
+                    $('#resplayer').hide();  
+                    players[index].addCard(game.nextStep());
+                    showOneCard(elem, players[index].getLastCard());
+                    if (!game.continue(players[index])) {
+                        stopSet();
+                    }
+                });
+                
+                function showOneCard(elem, card) {
+                    elem.append('<div style="display: none;"><img src="images/' + card.getNominal() + card.getSuit()  + '.png" /></div>');
+                    elem.find('div:last').fadeIn(500);
+                    if (!index) {
+                        $('#resplayer').text(players[index].getScore()).fadeIn(700);
+                    }
+                }
+                
+                function stopSet() {
+                    $('input[name=take]').hide();
+                    $('input[name=enough]').hide();
+                    // делает ход компьютер 
+                    game.stepComputer( ++index );
+                    // вскрываемся, комп показывает карты
+                    showResultComputer();
+                    resultsWin();
+                    $('input[name=start]').show(1000);
+                }
+                
+                function resultsWin() {
+                    var winner = game.resultWin();
+                    if (winner !== null) {
+                        winner.win();
+                        $('#' + winner.getName()).text(winner.getScoreGame());  
+                        $('p.result').text( winner.getName() + " win!");
+                    } else { // draw game
+                        $('p.result').text( "Draw game!" );
+                    }
+                }
+                
+                function showResultComputer() {
+                    elem = $('div.set').append('<div class="row">').find('div.row:last');
+                    $('p.rescomp span:first').show(500);
+                    $('#rescomp').text(players[index].getScore()).fadeIn(700);  
+                    
+                    var cards = players[index].getCard();
+                    for (var i = 0; i < cards.length; i++) {
+                        showOneCard(elem, cards[i]);
+                    }
+
+                }
+                
+                
+                
+            });
+            
+
+
+        </script>
+    </body>
+</html>

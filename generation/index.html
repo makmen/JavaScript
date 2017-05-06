@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="reset.css" rel="stylesheet">
+        <link href="main.css" rel="stylesheet">
+        <script language="javascript" src="jquery-1.4.2.min.js"></script>
+        <script language="javascript" src="script.js"></script>
+    </head>
+    <body>
+        <div class="wrap">
+            <h1>Генерация случайных наборов из 5 карт без повторений</h1>
+            <div class="content">
+                <div class="start">
+                    <p><input  type="button" name="start" value="Start generate" /></p>
+                </div>
+                <h2 id="step"></h2>
+                <div class="set">
+                </div>
+                <div class="result">
+                    <p id="result"></p>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var limit = 20;
+            var step;
+            var timeout;
+            var objects;
+
+            $(function(){
+                $('input[name=start]').click(function() {
+                    $('input[name=start]').hide();
+                    $('#step').empty();
+                    $('div.set').empty();
+                    step = 0
+                    objects = [];
+                    timeout = setInterval(nextAutoStep, 500);
+                });
+            });
+            
+            function nextAutoStep() {
+                var set = new GenerateSet(objects);
+                objects.push(set);
+                $('#step').text("Сгененировано: " + ++step);
+                var elem = $('div.set').append('<div class="row">').find('div.row:last');
+                fillRow(elem, set)
+                if (objects.length >= limit) {
+                    clearInterval(timeout);
+                    $('input[name=start]').show();
+                }
+            }
+            
+            function fillRow(elem, set) {
+                elem.append("<div><p>" + step + ")&nbsp;" + "</p></div>");
+                var cards = set.getCards();
+                for (var i = 0; i < cards.length; ++i) {
+                    elem.append('<div style="display: none;"><img src="images/' + cards[i].nominal().toLowerCase() + cards[i].getSuit()  + '.png" /></div>');
+                    elem.find('div:last').fadeIn(i * 1000 + 1000);     
+                }
+            }
+
+        </script>
+    </body>
+</html>

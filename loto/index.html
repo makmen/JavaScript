@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="reset.css" rel="stylesheet">
+        <link href="main.css" rel="stylesheet">
+        <script language="javascript" src="jquery-1.4.2.min.js"></script>
+        <script language="javascript" src="loto.js"></script>
+    </head>
+    <body>
+        <div class="wrap">
+            <h1>Суперлото</h1>
+            <div class="content">
+                <div class="start">
+                    <p><input  type="button" name="start" value="Start Game" /></p>
+                </div>
+                <h2 id="step"></h2>
+                <table class="ticket"></table>
+                <div class="result">
+                    <p id="result"></p>
+                </div>
+                <div class="start">
+                    <p><input type="button" name="step" value="Step Game" /></p>
+                </div>
+                
+            </div>
+        </div>
+        <script type="text/javascript">
+            var limitX = 6, limitY = 9;        
+            initialize();
+            var step, currentNumber;
+            var ticket, game;
+            var timeout;
+            $('input[name=step]').hide();
+            
+            $(function(){
+                $('input[name=start]').click(function() {
+                    step = 0;
+                    $('input[name=start]').hide();
+                    ticket = new Ticket();
+                    $('table.ticket').empty();
+                    shapka(limitY);
+                    showTicket();
+                    game = new Game();
+                    $('#step').text("Ход игры: " + ++step);
+                    currentNumber = game.nextStep();
+                    $('#result').text("Лото: " + currentNumber);
+                    checkNumber();
+                    $('table.ticket tr:nth-child(odd)').toggleClass('striped');
+                    timeout = setInterval(nextAutoStep, 500);
+                });
+                $('input[name=step]').click(function() {
+                    $('#step').text("Ход игры: " + ++step);
+                    currentNumber = game.nextStep();
+                    $('#result').text($('#result').text() + ", " + currentNumber);
+                    checkNumber();
+                });
+            });
+            
+            function nextAutoStep() {
+                $('#step').text("Ход игры: " + ++step);
+                currentNumber = game.nextStep();
+                $('#result').text($('#result').text() + ", " + currentNumber);
+                checkNumber();
+            }
+            
+            function checkNumber() {
+                var result = $('table.ticket td').filter(function() { 
+                    return this.innerHTML == currentNumber
+                }); 
+                if (result.length > 0) {
+                    result.addClass("red");
+                    if (ticket.markNumber(currentNumber)) {
+                        $('input[name=start]').show();
+                        //$('input[name=step]').hide();
+                        clearInterval(timeout);
+                    }
+                }
+            }
+            
+            function showTicket(numbers) {
+                var rows = [];
+                var need = true;
+                for (var i = 0; i < limitX; i++) {
+                    rows = ticket.getElements(i);
+                    if (i && i%3 == 0 && need) {
+                        showEmptyRow();
+                        need = false;
+                        --i;
+                        continue;
+                    }
+                    showRow(rows);
+                }
+            }
+            function showRow(num) {
+                var success = false;
+                var counter;
+                var rand = 0;
+                var buffer;
+                while(!success) {
+                    buffer = [];
+                    counter = 0;
+                    for (var j = 0, pos = 0; j < limitY; j++) {
+                        rand = Math.floor( Math.random() * 2);
+                        if (rand) {
+                            if (counter < num.length) {
+                                ++counter;
+                                buffer.push("<td>" + num[pos++] + "</td>")
+                            } else {
+                                buffer.push("<td>&nbsp;</td>");   
+                            }
+                        } else {
+                            buffer.push("<td>&nbsp;</td>"); 
+                        }
+                    }
+                    if (counter >= num.length) {
+                        success = true;
+                        $('table.ticket').append("<tr></tr>");
+                        for (j = 0; j < limitY; j++) {
+                            $('table.ticket tr:last').append(buffer[j]); 
+                        }
+                    }
+                }
+            }
+            
+            function initialize() {
+                shapka(limitY);
+                for (var i = 0; i < limitX; i++) {
+                    showEmptyRow();
+                }
+            }
+            function showEmptyRow() {
+                $('table.ticket').append("<tr></tr>");
+                for (var j = 0; j < limitY; j++) {
+                    $('table.ticket tr:last').append("<td>&nbsp;</td>"); 
+                }
+            }
+            
+            function shapka(limit) {
+                $('table.ticket').append("<tr></tr>");
+                for (var i = 0; i < limit; i++) {
+                    $('table.ticket tr:last').append("<th>" + (+i + 1)  + "</th>"); 
+                }
+            }
+            
+            
+        </script>
+    </body>
+</html>

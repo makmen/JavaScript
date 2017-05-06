@@ -1,0 +1,70 @@
+/* Common Part
+----------------------------------------------- */
+html, body {
+    height:100%;
+    background-color: #ccc;
+}
+body {
+    font:14px Arial, Helvetica, sans-serif;
+    line-height:18px;
+}
+.wrap {
+    margin: 0 auto;
+    width: 1000px;
+    background-color: #FFF;
+}
+h1 {
+    font:18px Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 15px 0;
+}
+h2 {
+    font:16px Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding: 5px 0;
+    font-weight: bold;
+}
+.content {
+
+}
+div.start p {
+    text-align: center;
+}
+input.startGame {
+
+}
+.ticket {
+  border: 1px black solid;
+  border-collapse: collapse;
+  text-align: center;
+  margin: 0 auto;
+}
+.ticket th {
+  border: 1px outset silver;
+  background-color: maroon;
+  color: white;
+}
+.ticket tr {
+  background-color: white;
+  margin: 1px;
+}
+.ticket td.red {
+  background-color: #ccc;
+  color: white;
+}
+.ticket tr.striped {
+  background-color: coral;
+}
+.ticket th {
+  padding: 10px 15px;
+}
+.ticket td {
+  padding: 10px 15px;
+}
+.result {
+    padding: 20px 0;
+    font:16px Arial, Helvetica, sans-serif;
+}
+.result p {
+  text-align: center;
+}
